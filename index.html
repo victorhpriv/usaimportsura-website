@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usaimportsura — Importadora Apple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#0a1f3d;
+    --navy-ink:#0f2c52;
+    --turquoise:#2fd6e6;
+    --turquoise-soft:#bdf3f7;
+    --white:#ffffff;
+    --mist:#f3f8fb;
+    --mist-2:#e9f2f6;
+    --slate:#5c7086;
+    --slate-light:#8b9cad;
+    --line:#e1ebf0;
+    --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif;
+    color:var(--navy-deep);
+    background:var(--white);
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk',sans-serif;
+    letter-spacing:0.01em;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--turquoise);
+    font-weight:500;
+  }
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;}
+  img,svg{display:block;max-width:100%;}
+  .container{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+  button{font-family:inherit;cursor:pointer;border:none;}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.8s ease, transform 0.8s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(255,255,255,0.82);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    height:82px;
+  }
+  .logo{
+    display:flex;align-items:center;gap:12px;
+  }
+  .logo-mark{width:34px;height:34px;flex-shrink:0;}
+  .logo-text{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:1.05rem;
+    letter-spacing:0.16em;
+    color:var(--navy-deep);
+  }
+  .logo-text span{color:var(--turquoise);}
+  nav ul{display:flex;gap:38px;align-items:center;}
+  nav a{
+    font-size:0.92rem;
+    font-weight:500;
+    color:var(--navy-ink);
+    position:relative;
+    padding:6px 0;
+  }
+  nav a::after{
+    content:'';position:absolute;left:0;bottom:0;width:0;height:2px;
+    background:var(--turquoise);transition:width 0.3s ease;
+  }
+  nav a:hover::after{width:100%;}
+  .nav-cta{
+    background:var(--navy-deep);
+    color:var(--white);
+    padding:12px 24px;
+    border-radius:100px;
+    font-size:0.88rem;
+    font-weight:600;
+    display:flex;align-items:center;gap:8px;
+    transition:background 0.3s ease, transform 0.3s ease;
+  }
+  .nav-cta:hover{background:var(--navy-ink);transform:translateY(-1px);}
+  .menu-btn{display:none;background:none;width:28px;height:20px;position:relative;}
+  .menu-btn span{position:absolute;left:0;right:0;height:2px;background:var(--navy-deep);transition:0.3s;}
+  .menu-btn span:nth-child(1){top:0;}
+  .menu-btn span:nth-child(2){top:9px;}
+  .menu-btn span:nth-child(3){top:18px;}
+
+  /* ---------- HERO SCROLL-LOCK WRAPPER ---------- */
+  .hero-scrub{
+    position:relative;
+    height:420vh; /* scroll distance that drives the rotation before releasing */
+  }
+  .hero{
+    position:sticky;
+    top:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+  }
+  @media(prefers-reduced-motion: reduce){
+    .hero-scrub{height:auto;}
+    .hero{position:relative;height:auto;padding:190px 0 120px;}
+  }
+
+  /* ---------- HERO (dark luxury) ---------- */
+  .hero{
+    padding:0;
+    background:
+      radial-gradient(ellipse 900px 600px at 78% 22%, rgba(47,214,230,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 15% 85%, rgba(47,214,230,0.08), transparent 65%),
+      linear-gradient(160deg,#050d1b 0%, #08172e 55%, #0a1f3d 100%);
+    overflow:hidden;
+  }
+  .hero-blob{
+    position:absolute;
+    top:-260px;right:-220px;
+    width:760px;height:760px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, rgba(47,214,230,0.10) 0%, rgba(47,214,230,0.03) 45%, rgba(47,214,230,0) 70%);
+    z-index:0;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:40px;
+    align-items:center;
+    position:relative;
+    z-index:1;
+  }
+  .hero .eyebrow{color:var(--turquoise-soft);}
+  .hero h1{
+    font-size:3.6rem;
+    line-height:1.05;
+    font-weight:600;
+    margin:22px 0 24px;
+    max-width:560px;
+    color:#ffffff;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--turquoise);
+    position:relative;
+  }
+  .hero p.lead{
+    font-size:1.08rem;
+    color:#a9bdd1;
+    max-width:460px;
+    line-height:1.65;
+    margin-bottom:36px;
+  }
+  .hero-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--turquoise);
+    color:var(--navy-deep);
+    padding:16px 30px;
+    border-radius:100px;
+    font-weight:700;
+    font-size:0.95rem;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    box-shadow:0 16px 34px -14px rgba(47,214,230,0.45);
+  }
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-primary svg path{stroke:#0a1f3d;}
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:8px;
+    font-weight:600;font-size:0.95rem;color:var(--navy-ink);
+    padding:16px 6px;border-bottom:2px solid transparent;
+    transition:border-color 0.3s ease, color 0.3s ease;
+  }
+  .btn-ghost:hover{border-color:var(--turquoise);color:var(--turquoise);}
+  .btn-ghost svg{transition:transform 0.3s ease;}
+  .btn-ghost:hover svg{transform:translateX(4px);}
+  .hero .btn-ghost{color:#dce8f0;}
+  .hero .btn-ghost svg path{stroke:#dce8f0;}
+  .hero .btn-ghost:hover{color:var(--turquoise);}
+  .hero .btn-ghost:hover svg path{stroke:var(--turquoise);}
+
+  .hero-visual{position:relative;display:flex;justify-content:center;align-items:flex-end;min-height:480px;perspective:1200px;}
+  .hero-stage{position:relative;width:100%;max-width:420px;height:460px;display:flex;justify-content:center;align-items:flex-end;will-change:transform;}
+  .light-ring{
+    position:absolute;
+    left:50%;bottom:66px;
+    width:320px;height:320px;
+    transform:translateX(-50%);
+    border-radius:50%;
+    border:2px solid rgba(47,214,230,0.55);
+    box-shadow:
+      0 0 40px 6px rgba(47,214,230,0.35),
+      0 0 90px 20px rgba(47,214,230,0.18),
+      inset 0 0 40px rgba(47,214,230,0.25);
+    animation:pulse-ring 4.5s ease-in-out infinite;
+    z-index:1;
+    will-change:transform, opacity;
+  }
+  @keyframes pulse-ring{
+    0%,100%{opacity:0.75;}
+    50%{opacity:1;}
+  }
+  .pedestal{
+    position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+    width:270px;z-index:1;
+  }
+  .device-illustration{filter:drop-shadow(0 25px 35px rgba(0,0,0,0.6));transition:filter 0.4s ease;}
+
+  .flip-scene{
+    position:relative;z-index:2;
+    width:230px;height:400px;
+    margin:0 auto 60px;
+    perspective:1400px;
+  }
+  .flip-card{
+    position:relative;
+    width:100%;height:100%;
+    transform-style:preserve-3d;
+    will-change:transform;
+  }
+  .flip-face{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    backface-visibility:hidden;
+    filter:drop-shadow(0 30px 40px rgba(0,0,0,0.6));
+  }
+  .flip-back{transform:rotateY(180deg);}
+
+  .scroll-hint{
+    position:absolute;
+    bottom:26px;left:50%;
+    transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;
+    color:#7fd8e0;opacity:0.8;
+    transition:opacity 0.4s ease;
+    animation:hint-bob 2s ease-in-out infinite;
+  }
+  @keyframes hint-bob{
+    0%,100%{transform:translateX(-50%) translateY(0);}
+    50%{transform:translateX(-50%) translateY(6px);}
+  }
+
+  .float-dot{
+    position:absolute;
+    border-radius:50%;
+    background:var(--turquoise);
+    opacity:0.55;
+    z-index:2;
+    will-change:transform;
+  }
+  .spark{position:absolute;z-index:4;opacity:0.8;will-change:transform;}
+
+  /* ---------- TRUST BAR ---------- */
+  .trust-bar{
+    background:var(--navy-deep);
+    padding:34px 0;
+  }
+  .trust-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+  }
+  .trust-item{
+    display:flex;align-items:center;gap:14px;
+    color:var(--white);
+  }
+  .trust-item .icon-wrap{
+    width:46px;height:46px;border-radius:50%;
+    background:rgba(47,214,230,0.14);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .trust-item strong{display:block;font-size:0.94rem;font-weight:600;}
+  .trust-item span{display:block;font-size:0.78rem;color:var(--slate-light);margin-top:2px;}
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section{padding:110px 0;}
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:56px;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-size:2.3rem;
+    font-weight:600;
+    margin-top:14px;
+    max-width:520px;
+  }
+  .section-link{
+    font-size:0.92rem;font-weight:600;color:var(--navy-ink);
+    display:flex;align-items:center;gap:6px;
+    border-bottom:2px solid var(--turquoise);padding-bottom:4px;
+  }
+
+  /* ---------- CATEGORIES ---------- */
+  .cat-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:18px;
+  }
+  .cat-card{
+    background:var(--mist);
+    border-radius:var(--radius);
+    padding:26px 16px 20px;
+    text-align:center;
+    transition:transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    border:1px solid transparent;
+  }
+  .cat-card:hover{
+    transform:translateY(-6px);
+    background:var(--white);
+    box-shadow:0 20px 40px -22px rgba(10,31,61,0.25);
+    border-color:var(--line);
+  }
+  .cat-card .icon-circle{
+    width:58px;height:58px;border-radius:50%;
+    background:var(--white);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 16px;
+    box-shadow:inset 0 0 0 1px var(--line);
+    transition:background 0.35s ease;
+  }
+  .cat-card:hover .icon-circle{background:var(--navy-deep);}
+  .cat-card:hover .icon-circle svg{stroke:var(--turquoise);}
+  .cat-card p{font-size:0.88rem;font-weight:600;}
+
+  /* ---------- FEATURED PRODUCT ---------- */
+  .feature-banner{
+    background:linear-gradient(120deg,var(--navy-deep) 0%,var(--navy-ink) 55%, #123a63 100%);
+    border-radius:28px;
+    padding:64px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    gap:30px;
+    position:relative;
+    overflow:hidden;
+    color:var(--white);
+  }
+  .feature-banner::before{
+    content:'';position:absolute;
+    width:520px;height:520px;border-radius:50%;
+    background:radial-gradient(circle,rgba(47,214,230,0.22) 0%, rgba(47,214,230,0) 68%);
+    top:-180px;left:-160px;
+  }
+  .feature-banner .eyebrow{color:var(--turquoise-soft);}
+  .feature-banner h3{
+    font-size:2.3rem;font-weight:600;margin:14px 0 16px;line-height:1.15;
+  }
+  .feature-banner p{color:#c4d3e2;max-width:400px;line-height:1.6;margin-bottom:30px;}
+  .btn-accent{
+    background:var(--turquoise);
+    color:var(--navy-deep);
+    padding:15px 28px;
+    border-radius:100px;
+    font-weight:700;
+    font-size:0.92rem;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:transform 0.3s ease;
+  }
+  .btn-accent:hover{transform:translateY(-2px);}
+  .feature-visual{position:relative;display:flex;justify-content:center;align-items:flex-end;z-index:1;min-height:340px;}
+  .feature-stage{position:relative;width:100%;max-width:260px;height:320px;display:flex;justify-content:center;align-items:flex-end;}
+  .mini-ring{
+    position:absolute;left:50%;bottom:38px;width:220px;height:220px;
+    transform:translateX(-50%);border-radius:50%;
+    border:2px solid rgba(47,214,230,0.5);
+    box-shadow:0 0 30px 4px rgba(47,214,230,0.3), 0 0 70px 14px rgba(47,214,230,0.15), inset 0 0 30px rgba(47,214,230,0.2);
+    animation:pulse-ring 4.5s ease-in-out infinite;
+  }
+  .mini-pedestal{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:190px;z-index:1;}
+  .mini-device{position:relative;z-index:2;width:190px;filter:drop-shadow(0 22px 30px rgba(0,0,0,0.55));animation:float-device 5.5s ease-in-out infinite;}
+  @keyframes float-device{
+    0%,100%{transform:translateY(0) rotate(-5deg);}
+    50%{transform:translateY(-14px) rotate(-2deg);}
+  }
+
+  /* ---------- TRUST / WHY IMPORT ---------- */
+  .why-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:28px;
+  }
+  .why-card{
+    padding:34px 30px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    transition:transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .why-card:hover{transform:translateY(-6px);box-shadow:0 24px 50px -30px rgba(10,31,61,0.3);}
+  .why-card .num{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:0.8rem;font-weight:600;color:var(--turquoise);
+    letter-spacing:0.1em;
+  }
+  .why-card h3{font-size:1.2rem;margin:14px 0 10px;font-weight:600;}
+  .why-card p{font-size:0.92rem;color:var(--slate);line-height:1.6;}
+
+  /* ---------- STATS ---------- */
+  .stats-strip{
+    background:var(--mist);
+    border-radius:24px;
+    padding:50px 60px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    text-align:center;
+  }
+  .stat h4{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:2.4rem;font-weight:700;color:var(--navy-deep);
+  }
+  .stat span{font-size:0.85rem;color:var(--slate);font-weight:500;}
+
+  /* ---------- TESTIMONIAL ---------- */
+  .testi{
+    display:grid;grid-template-columns:0.9fr 1.1fr;
+    gap:50px;align-items:center;
+    margin-top:90px;
+  }
+  .testi-quote{
+    background:var(--navy-deep);
+    border-radius:24px;
+    padding:52px;
+    color:var(--white);
+    position:relative;
+  }
+  .testi-quote svg.quote-mark{width:34px;height:34px;margin-bottom:18px;opacity:0.7;}
+  .testi-quote p{font-size:1.15rem;line-height:1.6;font-weight:400;color:#dce8f0;}
+  .testi-quote .author{margin-top:26px;display:flex;align-items:center;gap:12px;}
+  .testi-quote .author-dot{
+    width:44px;height:44px;border-radius:50%;
+    background:var(--turquoise);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:var(--navy-deep);font-family:'Space Grotesk',sans-serif;
+  }
+  .testi-quote .author strong{display:block;font-size:0.92rem;}
+  .testi-quote .author span{font-size:0.78rem;color:var(--slate-light);}
+  .testi-side h3{font-size:1.9rem;font-weight:600;margin-bottom:16px;max-width:420px;}
+  .testi-side p{color:var(--slate);line-height:1.7;max-width:440px;}
+
+  /* ---------- CTA FINAL ---------- */
+  .cta-final{
+    background:linear-gradient(135deg,var(--navy-deep),#0d3057);
+    border-radius:28px;
+    padding:70px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .cta-final::after{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 80% 20%, rgba(47,214,230,0.18), transparent 60%);
+  }
+  .cta-final h2{
+    color:var(--white);font-size:2.2rem;font-weight:600;margin-bottom:16px;position:relative;z-index:1;
+  }
+  .cta-final p{color:#bcd0e0;margin-bottom:34px;position:relative;z-index:1;}
+  .cta-final-actions{display:flex;gap:16px;justify-content:center;position:relative;z-index:1;flex-wrap:wrap;}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--navy-deep);color:#c4d3e2;padding:70px 0 30px;}
+  .footer-grid{
+    display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:40px;
+    padding-bottom:50px;border-bottom:1px solid rgba(255,255,255,0.1);
+  }
+  .footer-grid h4{color:var(--white);font-size:0.85rem;margin-bottom:18px;font-weight:600;letter-spacing:0.05em;}
+  .footer-grid li{margin-bottom:10px;font-size:0.88rem;}
+  .footer-grid a:hover{color:var(--turquoise);}
+  .footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .footer-logo .logo-text{color:var(--white);}
+  .footer-about{font-size:0.88rem;line-height:1.6;max-width:280px;color:#a6bacc;}
+  .footer-bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:26px;font-size:0.8rem;color:#8398ac;flex-wrap:wrap;gap:10px;
+  }
+
+  /* ---------- responsive ---------- */
+  @media(max-width:980px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:2.7rem;}
+    .cat-grid{grid-template-columns:repeat(3,1fr);}
+    .trust-grid{grid-template-columns:repeat(2,1fr);}
+    .why-grid{grid-template-columns:1fr;}
+    .feature-banner{grid-template-columns:1fr;padding:44px 30px;}
+    .feature-visual{order:-1;}
+    .stats-strip{grid-template-columns:repeat(2,1fr);gap:26px;}
+    .testi{grid-template-columns:1fr;}
+    nav ul{display:none;}
+    .menu-btn{display:block;}
+    .nav-cta{display:none;}
+  }
+  @media(max-width:560px){
+    .container{padding:0 20px;}
+    .hero{padding:140px 0 70px;}
+    .hero h1{font-size:2.1rem;}
+    .section{padding:70px 0;}
+    .cat-grid{grid-template-columns:repeat(2,1fr);}
+    .cta-final{padding:44px 24px;}
+    .cta-final h2{font-size:1.6rem;}
+    .feature-banner h3{font-size:1.7rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav-wrap">
+    <a href="#top" class="logo">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none">
+        <path d="M20 3 L35 12 V28 L20 37 L5 28 V12 Z" stroke="#0a1f3d" stroke-width="2"/>
+        <path d="M20 3 V37" stroke="#2fd6e6" stroke-width="2"/>
+        <path d="M5 12 L20 21 L35 12" stroke="#2fd6e6" stroke-width="2"/>
+      </svg>
+      <span class="logo-text">USA<span>IMPORT</span>SURA</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#produtos">Produtos</a></li>
+        <li><a href="#por-que">Por que importar</a></li>
+        <li><a href="#depoimentos">Depoimentos</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+    </nav>
+    <a href="#produtos" class="nav-cta">
+      Ver catálogo
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+    </a>
+    <button class="menu-btn" aria-label="menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO (scroll-locked 3D rotation) -->
+  <div class="hero-scrub" id="heroScrub">
+    <section class="hero" id="heroSticky">
+      <div class="hero-blob"></div>
+      <div class="container hero-grid">
+        <div class="reveal in">
+          <span class="eyebrow">Importadora especializada em Apple</span>
+          <h1>Tecnologia original, <em>direto de fora</em>, direto pra sua mão.</h1>
+          <p class="lead">A Usaimportsura traz iPhone, Mac, Watch e AirPods com procedência verificada, garantia real e o preço mais justo da cidade. Sem letra miúda.</p>
+          <div class="hero-actions">
+            <a href="#produtos" class="btn-primary">
+              Ver produtos disponíveis
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            </a>
+            <a href="#por-que" class="btn-ghost">
+              Como funciona a importação
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#0a1f3d" stroke-width="2" stroke-linecap="round"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal in">
+          <div class="hero-stage" id="heroStage">
+
+            <div class="light-ring" id="lightRing"></div>
+
+            <svg class="pedestal" id="pedestal" viewBox="0 0 300 130" fill="none">
+              <defs>
+                <linearGradient id="pedestalGrad" x1="30" y1="10" x2="280" y2="130" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#16304f"/>
+                  <stop offset="1" stop-color="#040a15"/>
+                </linearGradient>
+                <linearGradient id="pedestalRim" x1="60" y1="10" x2="240" y2="55" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#2fd6e6" stop-opacity="0.45"/>
+                  <stop offset="1" stop-color="#2fd6e6" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M35 118 L65 32 L150 12 L235 30 L268 82 L242 118 Z" fill="url(#pedestalGrad)"/>
+              <path d="M65 32 L150 12 L235 30 L205 54 L100 50 Z" fill="url(#pedestalRim)"/>
+            </svg>
+
+            <div class="flip-scene" id="flipScene">
+              <div class="flip-card" id="flipCard">
+                <svg class="flip-face flip-front" viewBox="0 0 320 460" fill="none">
+                  <defs>
+                    <linearGradient id="metalFrame" x1="20" y1="10" x2="300" y2="450" gradientUnits="userSpaceOnUse">
+                      <stop offset="0" stop-color="#2b4d78"/>
+                      <stop offset="1" stop-color="#08172e"/>
+                    </linearGradient>
+                    <linearGradient id="screenGrad" x1="40" y1="30" x2="280" y2="430" gradientUnits="userSpaceOnUse">
+                      <stop offset="0" stop-color="#0b2340"/>
+                      <stop offset="0.5" stop-color="#040c18"/>
+                      <stop offset="1" stop-color="#020610"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="20" y="10" width="200" height="440" rx="46" fill="url(#metalFrame)" stroke="#2fd6e6" stroke-width="1.6" stroke-opacity="0.7"/>
+                  <rect x="32" y="22" width="176" height="416" rx="38" fill="url(#screenGrad)"/>
+                  <rect x="95" y="30" width="50" height="16" rx="8" fill="#020610" stroke="#1c3c66" stroke-width="1"/>
+                  <text x="120" y="90" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#7fa8c9" opacity="0.85">Terça-feira, 14 Jul</text>
+                  <text x="120" y="130" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="42" font-weight="600" fill="#ffffff">10:24</text>
+                  <path d="M40 250 C 80 220, 100 300, 145 265 C 180 240, 200 300, 220 270" stroke="#2fd6e6" stroke-width="1.3" opacity="0.35"/>
+                  <circle cx="120" cy="230" r="70" fill="none" stroke="#2fd6e6" stroke-width="0.8" opacity="0.25"/>
+                  <g opacity="0.9">
+                    <path d="M50 400 h10 M64 400 v-6 M76 400 v-10 M88 400 v-4" stroke="#dce8f0" stroke-width="1.6" stroke-linecap="round"/>
+                    <circle cx="188" cy="398" r="9" fill="none" stroke="#dce8f0" stroke-width="1.4"/>
+                    <circle cx="188" cy="398" r="3" fill="#dce8f0"/>
+                  </g>
+                </svg>
+
+                <svg class="flip-face flip-back" viewBox="0 0 320 460" fill="none">
+                  <defs>
+                    <linearGradient id="metalBack" x1="60" y1="10" x2="260" y2="450" gradientUnits="userSpaceOnUse">
+                      <stop offset="0" stop-color="#1c3c66"/>
+                      <stop offset="0.5" stop-color="#0a1f3d"/>
+                      <stop offset="1" stop-color="#050d1b"/>
+                    </linearGradient>
+                  </defs>
+                  <rect x="60" y="10" width="200" height="440" rx="46" fill="url(#metalBack)" stroke="#2fd6e6" stroke-width="1.5" stroke-opacity="0.6"/>
+                  <rect x="70" y="20" width="180" height="420" rx="40" fill="none" stroke="#3f6690" stroke-width="1" stroke-opacity="0.5"/>
+                  <rect x="118" y="55" width="88" height="88" rx="26" fill="#04101f" stroke="#2fd6e6" stroke-width="1.3" stroke-opacity="0.7"/>
+                  <circle cx="200" cy="97" r="22" fill="none" stroke="#2fd6e6" stroke-width="1.6"/>
+                  <circle cx="200" cy="97" r="9" fill="#2fd6e6" opacity="0.55"/>
+                  <circle cx="160" cy="82" r="14" fill="none" stroke="#2fd6e6" stroke-width="1.6"/>
+                  <circle cx="160" cy="82" r="5.5" fill="#2fd6e6" opacity="0.55"/>
+                  <circle cx="160" cy="112" r="14" fill="none" stroke="#2fd6e6" stroke-width="1.6"/>
+                  <circle cx="160" cy="112" r="5.5" fill="#2fd6e6" opacity="0.55"/>
+                  <rect x="146" y="290" width="28" height="28" rx="8" fill="none" stroke="#2fd6e6" stroke-width="1.3" stroke-opacity="0.7"/>
+                  <path d="M155 304 l6 6 12 -14" stroke="#2fd6e6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="float-dot" id="dot1" style="width:10px;height:10px;top:14%;left:8%;"></div>
+            <div class="float-dot" id="dot2" style="width:6px;height:6px;top:68%;right:4%;"></div>
+            <div class="float-dot" id="dot3" style="width:14px;height:14px;bottom:8%;left:2%;opacity:0.3;"></div>
+
+          </div>
+          <div class="scroll-hint" id="scrollHint">
+            <span>role para girar</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M6 13l6 6 6-6" stroke="#7fd8e0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- TRUST BAR -->
+  <section class="trust-bar">
+    <div class="container trust-grid">
+      <div class="trust-item">
+        <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" stroke="#2fd6e6" stroke-width="1.8"/><circle cx="7" cy="18" r="1.6" stroke="#2fd6e6" stroke-width="1.5"/><circle cx="17" cy="18" r="1.6" stroke="#2fd6e6" stroke-width="1.5"/></svg></div>
+        <div><strong>Entrega rápida</strong><span>Todo o Brasil</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" stroke="#2fd6e6" stroke-width="1.8"/></svg></div>
+        <div><strong>Garantia real</strong><span>Até 12 meses</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="#2fd6e6" stroke-width="1.8"/><path d="M3 10h18" stroke="#2fd6e6" stroke-width="1.8"/></svg></div>
+        <div><strong>Parcelamento</strong><span>Em até 10x</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0116 0" stroke="#2fd6e6" stroke-width="1.8"/><rect x="3" y="12" width="4" height="6" rx="1.5" stroke="#2fd6e6" stroke-width="1.8"/><rect x="17" y="12" width="4" height="6" rx="1.5" stroke="#2fd6e6" stroke-width="1.8"/></svg></div>
+        <div><strong>Suporte 24/7</strong><span>Time próprio</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="section" id="produtos">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Catálogo</span>
+          <h2>O que você procura, a gente importa.</h2>
+        </div>
+        <a href="#" class="section-link">
+          Ver catálogo completo
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#0a1f3d" stroke-width="2" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+      <div class="cat-grid reveal">
+        <div class="cat-card">
+          <div class="icon-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="7" y="2" width="10" height="20" rx="2.5" stroke="#0a1f3d" stroke-width="1.6"/><path d="M10 19h4" stroke="#0a1f3d" stroke-width="1.6"/></svg></div>
+          <p>iPhone</p>
+        </div>
+        <div class="cat-card">
+          <div class="icon-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="12" rx="1.5" stroke="#0a1f3d" stroke-width="1.6"/><path d="M2 19h20" stroke="#0a1f3d" stroke-width="1.6"/></svg></div>
+          <p>Mac</p>
+        </div>
+        <div class="cat-card">
+          <div class="icon-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="8" y="6" width="8" height="12" rx="3" stroke="#0a1f3d" stroke-width="1.6"/><path d="M10 3h4" stroke="#0a1f3d" stroke-width="1.6"/></svg></div>
+          <p>Watch</p>
+        </div>
+        <div class="cat-card">
+          <div class="icon-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 13a8 8 0 0116 0" stroke="#0a1f3d" stroke-width="1.6"/><rect x="3" y="13" width="3.5" height="5" rx="1.2" stroke="#0a1f3d" stroke-width="1.6"/><rect x="17.5" y="13" width="3.5" height="5" rx="1.2" stroke="#0a1f3d" stroke-width="1.6"/></svg></div>
+          <p>AirPods</p>
+        </div>
+        <div class="cat-card">
+          <div class="icon-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="2" stroke="#0a1f3d" stroke-width="1.6"/><circle cx="12" cy="16" r="1.4" fill="#0a1f3d"/></svg></div>
+          <p>iPad</p>
+        </div>
+        <div class="cat-card">
+          <div class="icon-circle"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#0a1f3d" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="5" stroke="#0a1f3d" stroke-width="1.6"/></svg></div>
+          <p>Acessórios</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCT -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="feature-banner reveal">
+        <div style="position:relative;z-index:1;">
+          <span class="eyebrow">Chegou na loja</span>
+          <h3>iPhone 17 Pro Max<br>já disponível.</h3>
+          <p>Titânio azul, câmera de nova geração e procedência 100% verificada por nossa equipe antes de chegar até você.</p>
+          <a href="#contato" class="btn-accent">
+            Consultar disponibilidade
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#0a1f3d" stroke-width="2" stroke-linecap="round"/></svg>
+          </a>
+        </div>
+        <div class="feature-visual">
+          <div class="feature-stage">
+            <div class="mini-ring"></div>
+
+            <svg class="mini-pedestal" viewBox="0 0 300 130" fill="none">
+              <defs>
+                <linearGradient id="miniPedestalGrad" x1="30" y1="10" x2="280" y2="130" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#1c3355"/>
+                  <stop offset="1" stop-color="#050d1b"/>
+                </linearGradient>
+                <linearGradient id="miniPedestalRim" x1="60" y1="10" x2="240" y2="55" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#2fd6e6" stop-opacity="0.4"/>
+                  <stop offset="1" stop-color="#2fd6e6" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M35 118 L65 32 L150 12 L235 30 L268 82 L242 118 Z" fill="url(#miniPedestalGrad)"/>
+              <path d="M65 32 L150 12 L235 30 L205 54 L100 50 Z" fill="url(#miniPedestalRim)"/>
+            </svg>
+
+            <svg class="mini-device" viewBox="0 0 220 400" fill="none">
+              <defs>
+                <linearGradient id="titaniumBlue" x1="20" y1="10" x2="200" y2="390" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#3a5f8a"/>
+                  <stop offset="0.45" stop-color="#1c3a5e"/>
+                  <stop offset="1" stop-color="#0a1f3d"/>
+                </linearGradient>
+              </defs>
+              <rect x="20" y="10" width="180" height="380" rx="42" fill="url(#titaniumBlue)" stroke="#2fd6e6" stroke-width="1.4" stroke-opacity="0.6"/>
+              <rect x="30" y="20" width="160" height="360" rx="36" fill="none" stroke="#5c85ad" stroke-width="1" stroke-opacity="0.4"/>
+              <rect x="72" y="42" width="76" height="76" rx="22" fill="#081627" stroke="#2fd6e6" stroke-width="1.2" stroke-opacity="0.7"/>
+              <circle cx="150" cy="80" r="19" fill="none" stroke="#2fd6e6" stroke-width="1.5"/>
+              <circle cx="150" cy="80" r="7.5" fill="#2fd6e6" opacity="0.55"/>
+              <circle cx="115" cy="68" r="12" fill="none" stroke="#2fd6e6" stroke-width="1.5"/>
+              <circle cx="115" cy="68" r="4.5" fill="#2fd6e6" opacity="0.55"/>
+              <circle cx="115" cy="94" r="12" fill="none" stroke="#2fd6e6" stroke-width="1.5"/>
+              <circle cx="115" cy="94" r="4.5" fill="#2fd6e6" opacity="0.55"/>
+              <path d="M100 250 L110 260 L122 244" stroke="#2fd6e6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+              <circle cx="110" cy="252" r="20" fill="none" stroke="#2fd6e6" stroke-width="1" stroke-opacity="0.4"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY IMPORT -->
+  <section class="section" id="por-que">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <span class="eyebrow">Transparência</span>
+          <h2>Por que comprar um importado com a gente, e não em qualquer lugar.</h2>
+        </div>
+      </div>
+      <div class="why-grid reveal">
+        <div class="why-card">
+          <span class="num">01 — Procedência</span>
+          <h3>Rastreamento completo</h3>
+          <p>Cada aparelho passa por checagem de IMEI, autenticidade e histórico antes de ser liberado para venda.</p>
+        </div>
+        <div class="why-card">
+          <span class="num">02 — Garantia</span>
+          <h3>Suporte local de verdade</h3>
+          <p>Garantia própria da Usaimportsura, com assistência na cidade — sem depender de central em outro país.</p>
+        </div>
+        <div class="why-card">
+          <span class="num">03 — Preço</span>
+          <h3>Sem intermediário</h3>
+          <p>Importação direta reduz camadas de revenda, o que chega pra você em preço mais justo que o varejo tradicional.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS + TESTIMONIAL -->
+  <section class="section" id="depoimentos" style="padding-top:0;">
+    <div class="container">
+      <div class="stats-strip reveal">
+        <div class="stat"><h4>4.2k+</h4><span>Clientes atendidos</span></div>
+        <div class="stat"><h4>98%</h4><span>Satisfação</span></div>
+        <div class="stat"><h4>12 meses</h4><span>Garantia máxima</span></div>
+        <div class="stat"><h4>24/7</h4><span>Suporte ativo</span></div>
+      </div>
+
+      <div class="testi reveal">
+        <div class="testi-quote">
+          <svg class="quote-mark" viewBox="0 0 24 24" fill="none"><path d="M7 7h4v6l-3 6H5l2-6H7V7zM15 7h4v6l-3 6h-3l2-6h-1V7z" fill="#2fd6e6"/></svg>
+          <p>Comprei meu iPhone com a Usaimportsura e o processo foi muito mais transparente do que eu esperava — recebi tudo com nota, garantia e explicação clara de procedência.</p>
+          <div class="author">
+            <div class="author-dot">R</div>
+            <div><strong>Rafael M.</strong><span>Cliente desde 2024</span></div>
+          </div>
+        </div>
+        <div class="testi-side">
+          <span class="eyebrow">Depoimento</span>
+          <h3>Confiança construída aparelho por aparelho.</h3>
+          <p>Não vendemos só tecnologia — explicamos de onde ela vem, como chega até você e o que fazer se algo precisar de suporte. É assim que viramos referência na cidade.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section" style="padding-top:0;" id="contato">
+    <div class="container">
+      <div class="cta-final reveal">
+        <h2>Encontrou o que procurava?</h2>
+        <p>Fale com nosso time e receba disponibilidade, preço e prazo de entrega na hora.</p>
+        <div class="cta-final-actions">
+          <a href="#" class="btn-accent">Falar no WhatsApp</a>
+          <a href="#" class="btn-ghost" style="color:white;">
+            Ver catálogo completo
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <svg class="logo-mark" viewBox="0 0 40 40" fill="none" width="30" height="30">
+            <path d="M20 3 L35 12 V28 L20 37 L5 28 V12 Z" stroke="#ffffff" stroke-width="2"/>
+            <path d="M20 3 V37" stroke="#2fd6e6" stroke-width="2"/>
+            <path d="M5 12 L20 21 L35 12" stroke="#2fd6e6" stroke-width="2"/>
+          </svg>
+          <span class="logo-text">USAIMPORTSURA</span>
+        </div>
+        <p class="footer-about">Importadora especializada em produtos Apple, com foco em procedência verificada, garantia local e atendimento próximo.</p>
+      </div>
+      <div>
+        <h4>Produtos</h4>
+        <ul>
+          <li><a href="#">iPhone</a></li>
+          <li><a href="#">Mac</a></li>
+          <li><a href="#">Watch</a></li>
+          <li><a href="#">AirPods</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="#por-que">Por que importar</a></li>
+          <li><a href="#depoimentos">Depoimentos</a></li>
+          <li><a href="#">Garantia</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <ul>
+          <li><a href="#">WhatsApp</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">contato@usaimportsura.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Usaimportsura. Todos os direitos reservados.</span>
+      <span>Feito com foco em transparência e confiança.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu toggle
+  const menuBtn = document.querySelector('.menu-btn');
+  const navList = document.querySelector('nav ul');
+  let open = false;
+  menuBtn.addEventListener('click', () => {
+    open = !open;
+    if(open){
+      navList.style.display='flex';
+      navList.style.flexDirection='column';
+      navList.style.position='fixed';
+      navList.style.top='82px';
+      navList.style.left='0';
+      navList.style.right='0';
+      navList.style.background='#ffffff';
+      navList.style.padding='24px 32px';
+      navList.style.gap='18px';
+      navList.style.borderBottom='1px solid #e1ebf0';
+    } else {
+      navList.style.display='none';
+    }
+  });
+
+  // scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); }
+    });
+  },{threshold:0.15});
+  reveals.forEach(el=>io.observe(el));
+
+  // ---------- hero scroll-locked 3D rotation ----------
+  const heroScrub = document.getElementById('heroScrub');
+  const heroStage = document.getElementById('heroStage');
+  const lightRing = document.getElementById('lightRing');
+  const flipCard = document.getElementById('flipCard');
+  const pedestal = document.getElementById('pedestal');
+  const scrollHint = document.getElementById('scrollHint');
+  const dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
+  const heroTextBlock = document.querySelector('.hero .hero-grid > div:first-child');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let targetRotation = 0;
+  let currentRotation = 0;
+  let ticking = false;
+
+  function computeProgress(){
+    if(!heroScrub) return 0;
+    const rect = heroScrub.getBoundingClientRect();
+    const scrollable = rect.height - window.innerHeight;
+    if(scrollable <= 0) return 1;
+    const progress = -rect.top / scrollable;
+    return Math.min(Math.max(progress, 0), 1);
+  }
+
+  function updateOnScroll(){
+    ticking = false;
+    if(!heroScrub || !flipCard || prefersReduced) return;
+    const progress = computeProgress();
+
+    // drive a full 360deg spin (front -> back -> front) across the locked scroll range
+    targetRotation = progress * 360;
+
+    if(lightRing) lightRing.style.opacity = 0.7 + Math.sin(progress * Math.PI) * 0.3;
+    if(pedestal) pedestal.style.opacity = 1;
+    dots.forEach((d,i)=>{ if(d) d.style.transform = `translateY(${-progress * (20 + i * 10)}px)`; });
+
+    if(heroTextBlock){
+      const fadeStart = 0.15;
+      const t = Math.min(Math.max((progress - fadeStart) / (1 - fadeStart), 0), 1);
+      heroTextBlock.style.opacity = 1 - t * 0.85;
+      heroTextBlock.style.transform = `translateY(${t * 18}px)`;
+    }
+    if(scrollHint) scrollHint.style.opacity = progress > 0.04 ? 0 : 0.8;
+
+    if(!raf) raf = requestAnimationFrame(animateRotation);
+  }
+
+  let raf = null;
+  function animateRotation(){
+    currentRotation += (targetRotation - currentRotation) * 0.14;
+    if(flipCard) flipCard.style.transform = `rotateY(${currentRotation}deg)`;
+    if(Math.abs(targetRotation - currentRotation) > 0.05){
+      raf = requestAnimationFrame(animateRotation);
+    } else {
+      raf = null;
+    }
+  }
+
+  function onScroll(){
+    if(!ticking){ window.requestAnimationFrame(updateOnScroll); ticking = true; }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+
+  updateOnScroll();
+</script>
+
+</body>
+</html>
