@@ -107,26 +107,9 @@
   .menu-btn span:nth-child(2){top:9px;}
   .menu-btn span:nth-child(3){top:18px;}
 
-  /* ---------- HERO SCROLL-LOCK WRAPPER ---------- */
-  .hero-scrub{
-    position:relative;
-    height:280vh; /* scroll distance that drives the rotation before releasing */
-  }
+  /* ---------- HERO (dark luxury, static) ---------- */
   .hero{
-    position:sticky;
-    top:0;
-    height:100vh;
-    display:flex;
-    align-items:flex-start;
-  }
-  @media(prefers-reduced-motion: reduce){
-    .hero-scrub{height:auto;}
-    .hero{position:relative;height:auto;}
-  }
-
-  /* ---------- HERO (dark luxury) ---------- */
-  .hero{
-    padding:128px 0 40px;
+    padding:150px 0 80px;
     background:
       radial-gradient(ellipse 900px 600px at 78% 22%, rgba(47,214,230,0.16), transparent 60%),
       radial-gradient(ellipse 700px 500px at 15% 85%, rgba(47,214,230,0.08), transparent 65%),
@@ -149,16 +132,6 @@
     position:relative;
     z-index:1;
     width:100%;
-  }
-  /* shrink the whole composition on shorter laptop screens so nothing clips under the viewport */
-  @media(max-height:800px) and (min-width:981px){
-    .hero{padding-top:108px;}
-    .hero h1{font-size:2.9rem;}
-    .hero-visual{min-height:380px;}
-    .hero-stage{height:360px;}
-    .light-ring{width:250px;height:250px;bottom:50px;}
-    .pedestal{width:210px;}
-    .flip-scene{width:180px;height:310px;margin-bottom:44px;}
   }
   .hero .eyebrow{color:var(--turquoise-soft);}
   .hero h1{
@@ -247,6 +220,11 @@
     width:100%;height:100%;
     transform-style:preserve-3d;
     will-change:transform;
+    animation:spin-device 13s linear infinite;
+  }
+  @keyframes spin-device{
+    from{transform:rotateY(0deg);}
+    to{transform:rotateY(360deg);}
   }
   .flip-face{
     position:absolute;inset:0;
@@ -255,22 +233,6 @@
     filter:drop-shadow(0 30px 40px rgba(0,0,0,0.6));
   }
   .flip-back{transform:rotateY(180deg);}
-
-  .scroll-hint{
-    position:absolute;
-    bottom:26px;left:50%;
-    transform:translateX(-50%);
-    display:flex;flex-direction:column;align-items:center;gap:6px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;
-    color:#7fd8e0;opacity:0.8;
-    transition:opacity 0.4s ease;
-    animation:hint-bob 2s ease-in-out infinite;
-  }
-  @keyframes hint-bob{
-    0%,100%{transform:translateX(-50%) translateY(0);}
-    50%{transform:translateX(-50%) translateY(6px);}
-  }
 
   .float-dot{
     position:absolute;
@@ -511,6 +473,11 @@
   @media(max-width:980px){
     .hero-grid{grid-template-columns:1fr;}
     .hero h1{font-size:2.7rem;}
+    .hero-visual{margin-top:44px;}
+    .hero-stage{height:360px;}
+    .light-ring{width:230px;height:230px;bottom:36px;}
+    .pedestal{width:200px;}
+    .flip-scene{width:170px;height:300px;margin:0 auto 32px;}
     .cat-grid{grid-template-columns:repeat(3,1fr);}
     .trust-grid{grid-template-columns:repeat(2,1fr);}
     .why-grid{grid-template-columns:1fr;}
@@ -536,31 +503,10 @@
     .cta-final h2{font-size:1.6rem;}
     .feature-banner h3{font-size:1.7rem;}
   }
-
-  /* phones (real narrow screens): normal static banner, no scroll-jacking.
-     Narrow width threshold on purpose — real desktop browser windows are
-     almost never resized this small, so this won't false-trigger on desktop. */
-  @media (max-width:760px){
-    .hero-scrub{height:auto;}
-    .hero{
-      position:relative;
-      height:auto;
-      display:block;
-      padding:150px 0 60px;
-    }
-    .hero-visual{min-height:auto;margin-top:44px;}
-    .hero-stage{height:360px;}
-    .light-ring{width:230px;height:230px;bottom:36px;}
-    .pedestal{width:200px;}
-    .flip-scene{width:170px;height:300px;margin:0 auto 32px;}
-    .flip-card{animation:float-device 5.5s ease-in-out infinite;}
-    .scroll-hint{display:none;}
-  }
-  @media (max-width:560px){
-    .hero-stage{height:320px;}
-    .light-ring{width:200px;height:200px;bottom:30px;}
-    .pedestal{width:170px;}
-    .flip-scene{width:150px;height:260px;}
+  @media(prefers-reduced-motion: reduce){
+    .flip-card{animation:none;}
+    .light-ring{animation:none;}
+    .mini-device{animation:none;}
   }
 </style>
 </head>
@@ -594,14 +540,13 @@
 
 <main id="top">
 
-  <!-- HERO (scroll-locked 3D rotation) -->
-  <div class="hero-scrub" id="heroScrub">
-    <section class="hero" id="heroSticky">
-      <div class="hero-blob"></div>
-      <div class="container hero-grid">
-        <div class="reveal in">
-          <span class="eyebrow">Importadora especializada em Apple</span>
-          <h1>Original em cada detalhe.<br><em>Excelência</em> em cada escolha.</h1>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-blob"></div>
+    <div class="container hero-grid">
+      <div class="reveal in">
+        <span class="eyebrow">Importadora especializada em Apple</span>
+        <h1>Original em cada detalhe.<br><em>Excelência</em> em cada escolha.</h1>
           <p class="lead">A Usaimportsura traz iPhone, Mac, Watch e AirPods com procedência verificada, garantia real e o preço mais justo da cidade. Sem letra miúda.</p>
           <div class="hero-actions">
             <a href="#produtos" class="btn-primary">
@@ -691,15 +636,10 @@
             <div class="float-dot" id="dot3" style="width:14px;height:14px;bottom:8%;left:2%;opacity:0.3;"></div>
 
           </div>
-          <div class="scroll-hint" id="scrollHint">
-            <span>role para girar</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M6 13l6 6 6-6" stroke="#7fd8e0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
         </div>
 
       </div>
-    </section>
-  </div>
+  </section>
 
   <!-- TRUST BAR -->
   <section class="trust-bar">
@@ -977,77 +917,6 @@
     });
   },{threshold:0.15});
   reveals.forEach(el=>io.observe(el));
-
-  // ---------- hero scroll-locked 3D rotation ----------
-  // Always listens to scroll. On phones, CSS collapses .hero-scrub to a
-  // normal-height banner (see @media max-width:760px), so there is nothing
-  // to scrub and the flip-card gets a CSS-only idle float animation instead
-  // (CSS animations take priority over inline transforms, so there's no
-  // conflict). This avoids relying on JS device-detection, which can be
-  // unreliable across browsers/devices.
-  const heroScrub = document.getElementById('heroScrub');
-  const lightRing = document.getElementById('lightRing');
-  const flipCard = document.getElementById('flipCard');
-  const scrollHint = document.getElementById('scrollHint');
-  const dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
-  const heroTextBlock = document.querySelector('.hero .hero-grid > div:first-child');
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  let targetRotation = 0;
-  let currentRotation = 0;
-  let ticking = false;
-  let raf = null;
-
-  function computeProgress(){
-    if(!heroScrub) return 0;
-    const rect = heroScrub.getBoundingClientRect();
-    const scrollable = rect.height - window.innerHeight;
-    if(scrollable <= 0) return 1;
-    const progress = -rect.top / scrollable;
-    return Math.min(Math.max(progress, 0), 1);
-  }
-
-  function updateOnScroll(){
-    ticking = false;
-    if(!heroScrub || !flipCard || prefersReduced) return;
-    const progress = computeProgress();
-
-    // drive a full 360deg spin (front -> back -> front) across the locked scroll range
-    targetRotation = progress * 360;
-
-    if(lightRing) lightRing.style.opacity = 0.7 + Math.sin(progress * Math.PI) * 0.3;
-    dots.forEach((d,i)=>{ if(d) d.style.transform = `translateY(${-progress * (20 + i * 10)}px)`; });
-
-    if(heroTextBlock){
-      const fadeStart = 0.15;
-      const t = Math.min(Math.max((progress - fadeStart) / (1 - fadeStart), 0), 1);
-      heroTextBlock.style.opacity = 1 - t * 0.85;
-      heroTextBlock.style.transform = `translateY(${t * 18}px)`;
-    }
-    if(scrollHint) scrollHint.style.opacity = progress > 0.04 ? 0 : 0.8;
-
-    if(!raf) raf = requestAnimationFrame(animateRotation);
-  }
-
-  function animateRotation(){
-    currentRotation += (targetRotation - currentRotation) * 0.14;
-    if(flipCard) flipCard.style.transform = `rotateY(${currentRotation}deg)`;
-    if(Math.abs(targetRotation - currentRotation) > 0.05){
-      raf = requestAnimationFrame(animateRotation);
-    } else {
-      raf = null;
-    }
-  }
-
-  function onScroll(){
-    if(!ticking){ window.requestAnimationFrame(updateOnScroll); ticking = true; }
-  }
-
-  if(!prefersReduced){
-    window.addEventListener('scroll', onScroll, {passive:true});
-    window.addEventListener('resize', onScroll);
-    updateOnScroll();
-  }
 </script>
 
 
